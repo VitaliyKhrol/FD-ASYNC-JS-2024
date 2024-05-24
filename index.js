@@ -1,54 +1,53 @@
 
 
-// const resultofRequest = fetch('./data.json');
-
-// resultofRequest
-//   .then((responce) => {
-//     return responce.json();
-//   })
-//   .then((result) => {
-//     console.log(result)
-//     const card = createUserCard(result);
-//     console.log(card);
-//    const root =document.querySelector('#root');
-//    root.append(card);
-//   })
-//   .catch((reject) => {
-//     console.log(reject)
-//   })
+const resultofRequest = fetch('https://dummyjson.com/products');
+const root =document.querySelector('#root');
+const spinner = document.createElement('div');
+spinner.classList.add('loader');
+root.append(spinner);
 
 
-//   function createUserCard(user){
-//     const h2 = crElement('h2', {classNames: ['username']}, user.firstName,user.lastName);
-//     const p = crElement('p',{}, user.telNum);
-//     const div = crElement('div',{classNames:['card-wrapper']}, h2, p);
-//     return div;
-//   }
+
+resultofRequest
+  .then((responce) => {
+  const arr = responce.json()
+    return arr;
+  })
+  .then((result) => {
+    console.log(result)
+    const productArray = result.products.map((user)=>createProductCard(user));
+    console.log(productArray);
+     root.append(...productArray);
+  })
+  .catch((reject) => {
+    console.log(reject)
+  })
+  .finally(()=>{
+    spinner.remove();
+  })
 
 
-//   function crElement(type,{classNames=[]}, ...children){
-//     const elem = document.createElement(type);
-//     elem.classList.add(...classNames);
-//     elem.append(...children);
-//     return elem;
-// }
+  function createProductCard(product){
 
-
-const promice = new Promise(function(resolve,reject){
-  if (Math.random() > 0.5){
-    resolve('Its Okey');
-  } else {
-    reject('its NOT okey');
+    const h2 = crElement('h2', {classNames: ['username']}, product.title, product.category);
+    const img = document.createElement('img');
+    img.setAttribute('src', product.images[0] )
+  
+    img.classList.add('avatar');
+    const p = crElement('p',{}, product.price);
+    const div = crElement('div',{classNames:['card-wrapper']}, h2,img, p);
+    return div;
   }
-});
 
-promice
-.then((res)=>{
-  console.log(res)
-})
-.catch((rev)=>{
-  console.log(rev)
-})
+
+  function crElement(type,{classNames=[]}, ...children){
+    const elem = document.createElement(type);
+    elem.classList.add(...classNames);
+    elem.append(...children);
+    return elem;
+}
+
+
 
 
 
